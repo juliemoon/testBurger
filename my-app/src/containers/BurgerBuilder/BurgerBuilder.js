@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Aux from '../../hoc/Aux';
 import Burger from '../../components/Burger/Burger';
+import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 
 class BurgerBuilder extends Component{
   // will pass state to Burger.js to dynamically change ingredients
@@ -18,7 +19,10 @@ class BurgerBuilder extends Component{
         {/* replace this fake Burger div with real Burger component */}
         {/* <div>Burger</div> */}
         <Burger ingredients={this.state.ingredients}/>
-        <div>Build Controls</div>
+
+        {/* replace this placeholder with controls from  */}
+        {/* <div>Build Controls</div> */}
+        <BuildControls/>
       </Aux>
     )
   }
