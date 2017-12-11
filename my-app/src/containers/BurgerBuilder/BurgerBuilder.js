@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Aux from '../../hoc/Aux';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
+import Modal from '../../components/UI/Modal/Modal';
+import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 
 const INGREDIENT_PRICES = {
   salad: 0.5,
@@ -19,9 +21,22 @@ class BurgerBuilder extends Component{
       cheese: 0,
       meat: 0
     },
-    totalPrice: 1
+    totalPrice: 1,
+    purchaseable: false,
+    purchasing: false
   }
 
+  updatePurchaseState (ingredients) {
+    const sum = Object.keys(ingredients)
+          .map(igKey =>{
+            return ingredients[igKey];
+          })
+          .reduce((sum, el)=>{
+            return sum + el;
+          }, 0);
+          // checking to see if purchaseable is true or false;
+          this.setState({purchaseable: sum > 0});
+  }
   // add methods for users to add or remove
   // to add you need to know what the old ingredient count was
   addIngredientHandler = (type) => {
@@ -36,6 +51,7 @@ class BurgerBuilder extends Component{
     const oldPrice = this.state.totalPrice;
     const newPrice = oldPrice + priceAddition;
     this.setState({totalPrice: newPrice, ingredients: updatedIngredients});
+    this.updatePurchaseState(updatedIngredients);
   }
 
   removeIngredientHandler = (type) => {
@@ -53,6 +69,11 @@ class BurgerBuilder extends Component{
     const oldPrice = this.state.totalPrice;
     const newPrice = oldPrice - priceDeduction;
     this.setState({totalPrice: newPrice, ingredients: updatedIngredients});
+    this.updatePurchaseState(updatedIngredients);
+  }
+
+  purchaseHandler = () => {
+    this.setState({purchasing:true});
   }
   render(){
     const disabledInfo = {
@@ -65,6 +86,9 @@ class BurgerBuilder extends Component{
    
     return (
       <Aux>
+        <Modal show={this.state.purchasing}>
+          <OrderSummary ingredients={this.state.ingredients}/>
+        </Modal>
         {/* replace this fake Burger div with real Burger component */}
         {/* <div>Burger</div> */}
         <Burger ingredients={this.state.ingredients}/>
@@ -74,7 +98,10 @@ class BurgerBuilder extends Component{
         <BuildControls
           ingredientAdded={this.addIngredientHandler}
           ingredientRemoved={this.removeIngredientHandler}
-          disabled={disabledInfo}/>
+          disabled={disabledInfo}
+          purchaseable={this.state.purchaseable}
+          ordered={this.purchaseHandler}
+          price={this.state.totalPrice}/>
       </Aux>
     )
   }
