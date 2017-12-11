@@ -15,7 +15,13 @@ const buildControls = (props) =>(
   <div className={classes.BuildControls}>
     {/* loop through each item and pass into BuildControl and give label as key */}
     {controls.map(ctrl =>(
-      <BuildControl key={ctrl.label} label={ctrl.label}/>
+      <BuildControl 
+      key={ctrl.label} 
+      label={ctrl.label}
+      // this added property will be passed to button more in BuildControl.js
+      added={() => props.ingredientAdded(ctrl.type)}
+      removed= {() => props.ingredientRemoved(ctrl.type)}
+      disabled={props.disabled[ctrl.type]}/>
     ))}
   </div>
 );
